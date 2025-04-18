@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF OCR Tool - PDF Multi-Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header will be dynamically loaded -->
+    <div id="header-placeholder"></div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">PDF OCR Tool</h1>
+                <p class="text-center mb-4">Extract text from scanned PDFs and images within PDF files</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tool-container">
+                    <!-- File Upload Area -->
+                    <div class="file-upload-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <h4>Drag & Drop PDF Files Here</h4>
+                        <p class="text-muted">or</p>
+                        <input type="file" id="file-input" accept=".pdf" multiple class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            Choose Files
+                        </button>
+                    </div>
+
+                    <!-- OCR Options -->
+                    <div id="ocr-options" class="mt-4 d-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">OCR Settings</h5>
+                                
+                                <!-- Language Selection -->
+                                <div class="mb-3">
+                                    <label for="ocr-language" class="form-label">Recognition Language:</label>
+                                    <select class="form-select" id="ocr-language">
+                                        <option value="eng" selected>English</option>
+                                        <option value="fra">French</option>
+                                        <option value="deu">German</option>
+                                        <option value="spa">Spanish</option>
+                                        <option value="ita">Italian</option>
+                                        <option value="por">Portuguese</option>
+                                        <option value="rus">Russian</option>
+                                        <option value="chi_sim">Chinese (Simplified)</option>
+                                        <option value="chi_tra">Chinese (Traditional)</option>
+                                        <option value="jpn">Japanese</option>
+                                        <option value="kor">Korean</option>
+                                    </select>
+                                </div>
+
+                                <!-- OCR Mode -->
+                                <div class="mb-3">
+                                    <label for="ocr-mode" class="form-label">OCR Mode:</label>
+                                    <select class="form-select" id="ocr-mode">
+                                        <option value="accurate" selected>Accurate (Slower)</option>
+                                        <option value="fast">Fast (Less Accurate)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Output Format -->
+                                <div class="mb-3">
+                                    <label for="output-format" class="form-label">Output Format:</label>
+                                    <select class="form-select" id="output-format">
+                                        <option value="searchable-pdf" selected>Searchable PDF</option>
+                                        <option value="text">Text File</option>
+                                        <option value="word">Word Document</option>
+                                    </select>
+                                </div>
+
+                                <!-- Advanced Options -->
+                                <div class="mb-3">
+                                    <label class="form-label">Advanced Options:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="deskew" checked>
+                                        <label class="form-check-label" for="deskew">
+                                            Auto-Deskew Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-text" checked>
+                                        <label class="form-check-label" for="enhance-text">
+                                            Enhance Text
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remove-noise">
+                                        <label class="form-check-label" for="remove-noise">
+                                            Remove Background Noise
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="detect-orientation" checked>
+                                        <label class="form-check-label" for="detect-orientation">
+                                            Auto-Detect Page Orientation
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="preserve-layout" checked>
+                                        <label class="form-check-label" for="preserve-layout">
+                                            Preserve Document Layout
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-contrast">
+                                        <label class="form-check-label" for="enhance-contrast">
+                                            Enhance Contrast
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remove-shadows">
+                                        <label class="form-check-label" for="remove-shadows">
+                                            Remove Shadows
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-edges">
+                                        <label class="form-check-label" for="enhance-edges">
+                                            Enhance Edges
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remove-moire">
+                                        <label class="form-check-label" for="remove-moire">
+                                            Remove Moiré Patterns
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-fine-details">
+                                        <label class="form-check-label" for="enhance-fine-details">
+                                            Enhance Fine Details
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="auto-levels">
+                                        <label class="form-check-label" for="auto-levels">
+                                            Auto Levels
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-midtones">
+                                        <label class="form-check-label" for="enhance-midtones">
+                                            Enhance Midtones
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-saturation">
+                                        <label class="form-check-label" for="enhance-saturation">
+                                            Enhance Saturation
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-vibrance">
+                                        <label class="form-check-label" for="enhance-vibrance">
+                                            Enhance Vibrance
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-clarity">
+                                        <label class="form-check-label" for="enhance-clarity">
+                                            Enhance Clarity
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="dehaze">
+                                        <label class="form-check-label" for="dehaze">
+                                            Dehaze
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="advanced-denoise">
+                                        <label class="form-check-label" for="advanced-denoise">
+                                            Advanced Denoise
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="super-resolution">
+                                        <label class="form-check-label" for="super-resolution">
+                                            Super Resolution
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Page Selection -->
+                                <div class="mb-3">
+                                    <label class="form-label">Pages to Process:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="all-pages" checked>
+                                        <label class="form-check-label" for="all-pages">
+                                            All Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="custom-pages">
+                                        <label class="form-check-label" for="custom-pages">
+                                            Custom Range
+                                        </label>
+                                    </div>
+                                    <div id="page-range-input" class="mt-2 d-none">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="start-page" min="1" placeholder="Start">
+                                            <span class="input-group-text">to</span>
+                                            <input type="number" class="form-control" id="end-page" min="1" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preview Section -->
+                                <div class="mb-3">
+                                    <label class="form-label">Preview:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="show-preview" checked>
+                                        <label class="form-check-label" for="show-preview">
+                                            Show Page Preview
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Estimated processing time: <span id="estimated-time">0 seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div id="preview-section" class="mt-4 d-none">
+                        <h5 class="mb-3">Preview</h5>
+                        <div class="preview-controls mb-3">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary" id="prev-page">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="next-page">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <span class="ms-3">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                        </div>
+                        <div id="preview-container" class="border rounded p-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Original</h6>
+                                    <div id="original-preview" class="preview-image"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Processed</h6>
+                                    <div id="processed-preview" class="preview-image"></div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <h6>Extracted Text</h6>
+                                <div id="extracted-text" class="border p-2" style="min-height: 100px; max-height: 200px; overflow-y: auto;">
+                                    <p class="text-muted">Text will appear here after processing...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Process Button -->
+                    <div class="mt-4 text-center">
+                        <button id="process-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-cog"></i> Process PDF
+                        </button>
+                    </div>
+
+                    <div class="spinner" id="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer will be dynamically loaded -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tesseract.js for OCR -->
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+    <!-- PDF.js for PDF rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/tools/pdf-ocr.js"></script>
+</body>
+</html> 

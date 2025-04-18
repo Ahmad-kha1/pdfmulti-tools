@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to HTML Converter - PDF Multi-Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header will be dynamically loaded -->
+    <div id="header-placeholder"></div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">PDF to HTML Converter</h1>
+                <p class="text-center mb-4">Convert PDF documents to web-friendly HTML</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tool-container">
+                    <div class="file-upload-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <h4>Drag & Drop PDF File Here</h4>
+                        <p class="text-muted">or</p>
+                        <input type="file" id="file-input" accept=".pdf" class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            Choose File
+                        </button>
+                    </div>
+
+                    <div id="file-info" class="mt-4 d-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">PDF Information</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="mb-2">File Size: <span id="file-size">0 MB</span></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-2">Pages: <span id="total-pages">0</span></div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="output-format" class="form-label">Output Format:</label>
+                                    <select class="form-select" id="output-format">
+                                        <option value="html">HTML (Single Page)</option>
+                                        <option value="html-multi">HTML (Multiple Pages)</option>
+                                        <option value="html-embed">HTML (Embedded)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">HTML Options:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="responsive-layout" checked>
+                                        <label class="form-check-label" for="responsive-layout">
+                                            Responsive Layout
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="preserve-formatting" checked>
+                                        <label class="form-check-label" for="preserve-formatting">
+                                            Preserve Formatting
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="extract-images" checked>
+                                        <label class="form-check-label" for="extract-images">
+                                            Extract Images
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Web Optimization:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="minify-html" checked>
+                                        <label class="form-check-label" for="minify-html">
+                                            Minify HTML
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optimize-images" checked>
+                                        <label class="form-check-label" for="optimize-images">
+                                            Optimize Images
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="add-meta-tags" checked>
+                                        <label class="form-check-label" for="add-meta-tags">
+                                            Add Meta Tags
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pages to Convert:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="all-pages" checked>
+                                        <label class="form-check-label" for="all-pages">
+                                            All Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="custom-pages">
+                                        <label class="form-check-label" for="custom-pages">
+                                            Custom Range
+                                        </label>
+                                    </div>
+                                    <div id="page-range-input" class="mt-2 d-none">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="start-page" min="1" placeholder="Start">
+                                            <span class="input-group-text">to</span>
+                                            <input type="number" class="form-control" id="end-page" min="1" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Additional Features:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="add-navigation" checked>
+                                        <label class="form-check-label" for="add-navigation">
+                                            Add Navigation
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="add-search" checked>
+                                        <label class="form-check-label" for="add-search">
+                                            Add Search Functionality
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="add-print" checked>
+                                        <label class="form-check-label" for="add-print">
+                                            Add Print Styles
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Estimated conversion time: <span id="estimated-time">0 seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button id="convert-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-file-code"></i> Convert to HTML
+                        </button>
+                    </div>
+
+                    <div class="spinner" id="loading-spinner"></div>
+                </div>
+
+                <!-- Ad Section -->
+                <div class="ad-container text-center mt-4">
+                    <div class="ad-placeholder">
+                        Advertisement
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer will be dynamically loaded -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/tools/pdf-to-html.js"></script>
+</body>
+</html> 

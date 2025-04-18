@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to TIFF Converter - PDF Multi-Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Lightbox for preview -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+</head>
+<body>
+    <!-- Header will be dynamically loaded -->
+    <div id="header-placeholder"></div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">PDF to TIFF Converter</h1>
+                <p class="text-center mb-4">Convert PDF pages to high-quality TIFF images with advanced options</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tool-container">
+                    <div class="file-upload-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <h4>Drag & Drop PDF Files Here</h4>
+                        <p class="text-muted">or</p>
+                        <input type="file" id="file-input" accept=".pdf" multiple class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            Choose Files
+                        </button>
+                    </div>
+
+                    <div id="file-info" class="mt-4 d-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">PDF Information</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="mb-2">File Size: <span id="file-size">0 MB</span></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-2">Pages: <span id="total-pages">0</span></div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="output-filename" class="form-label">Output Filename:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="output-filename" placeholder="converted-pages">
+                                        <span class="input-group-text">.zip</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image-resolution" class="form-label">Resolution (DPI):</label>
+                                    <select class="form-select" id="image-resolution">
+                                        <option value="72">72 DPI (Web)</option>
+                                        <option value="150">150 DPI (Print)</option>
+                                        <option value="300" selected>300 DPI (High Quality)</option>
+                                        <option value="600">600 DPI (Ultra High)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="compression-type" class="form-label">Compression Type:</label>
+                                    <select class="form-select" id="compression-type">
+                                        <option value="none">None (Uncompressed)</option>
+                                        <option value="lzw">LZW (Lossless)</option>
+                                        <option value="zip">ZIP (Lossless)</option>
+                                        <option value="jpeg">JPEG (Lossy)</option>
+                                        <option value="ccitt">CCITT Group 4 (Fax)</option>
+                                        <option value="deflate">DEFLATE (Lossless)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Color Depth:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="color-depth" id="depth-1" value="1">
+                                        <label class="form-check-label" for="depth-1">
+                                            1-bit (Black & White)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="color-depth" id="depth-8" value="8">
+                                        <label class="form-check-label" for="depth-8">
+                                            8-bit (Grayscale)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="color-depth" id="depth-24" value="24" checked>
+                                        <label class="form-check-label" for="depth-24">
+                                            24-bit (True Color)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Image Enhancement:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-text" checked>
+                                        <label class="form-check-label" for="enhance-text">
+                                            Enhance Text
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optimize-colors" checked>
+                                        <label class="form-check-label" for="optimize-colors">
+                                            Optimize Colors
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remove-noise">
+                                        <label class="form-check-label" for="remove-noise">
+                                            Remove Noise
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="sharpen">
+                                        <label class="form-check-label" for="sharpen">
+                                            Sharpen Image
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="adjust-contrast">
+                                        <label class="form-check-label" for="adjust-contrast">
+                                            Adjust Contrast
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-details">
+                                        <label class="form-check-label" for="enhance-details">
+                                            Enhance Details
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="auto-levels">
+                                        <label class="form-check-label" for="auto-levels">
+                                            Auto Levels
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="despeckle">
+                                        <label class="form-check-label" for="despeckle">
+                                            Despeckle
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-shadows">
+                                        <label class="form-check-label" for="enhance-shadows">
+                                            Enhance Shadows
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-highlights">
+                                        <label class="form-check-label" for="enhance-highlights">
+                                            Enhance Highlights
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="reduce-moire">
+                                        <label class="form-check-label" for="reduce-moire">
+                                            Reduce Moiré Pattern
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-edges">
+                                        <label class="form-check-label" for="enhance-edges">
+                                            Enhance Edges
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-fine-details">
+                                        <label class="form-check-label" for="enhance-fine-details">
+                                            Enhance Fine Details
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-midtones">
+                                        <label class="form-check-label" for="enhance-midtones">
+                                            Enhance Midtones
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-saturation">
+                                        <label class="form-check-label" for="enhance-saturation">
+                                            Enhance Saturation
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-vibrance">
+                                        <label class="form-check-label" for="enhance-vibrance">
+                                            Enhance Vibrance
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-clarity">
+                                        <label class="form-check-label" for="enhance-clarity">
+                                            Enhance Clarity
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-dehaze">
+                                        <label class="form-check-label" for="enhance-dehaze">
+                                            Dehaze
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-denoise">
+                                        <label class="form-check-label" for="enhance-denoise">
+                                            Advanced Denoise
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-super-resolution">
+                                        <label class="form-check-label" for="enhance-super-resolution">
+                                            Super Resolution
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pages to Convert:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="all-pages" checked>
+                                        <label class="form-check-label" for="all-pages">
+                                            All Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="custom-pages">
+                                        <label class="form-check-label" for="custom-pages">
+                                            Custom Range
+                                        </label>
+                                    </div>
+                                    <div id="page-range-input" class="mt-2 d-none">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="start-page" min="1" placeholder="Start">
+                                            <span class="input-group-text">to</span>
+                                            <input type="number" class="form-control" id="end-page" min="1" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Preview Options:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="show-preview" checked>
+                                        <label class="form-check-label" for="show-preview">
+                                            Show Preview
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="preview-all-pages">
+                                        <label class="form-check-label" for="preview-all-pages">
+                                            Preview All Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="preview-enhancements" checked>
+                                        <label class="form-check-label" for="preview-enhancements">
+                                            Show Enhancement Effects
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="preview-split-view">
+                                        <label class="form-check-label" for="preview-split-view">
+                                            Split View (Original vs Enhanced)
+                                        </label>
+                                    </div>
+                                    <div class="mt-3">
+                                        <label for="preview-zoom" class="form-label">Zoom Level:</label>
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-secondary" type="button" id="zoom-out">
+                                                <i class="fas fa-search-minus"></i>
+                                            </button>
+                                            <input type="range" class="form-range" id="preview-zoom" min="10" max="200" value="100">
+                                            <button class="btn btn-outline-secondary" type="button" id="zoom-in">
+                                                <i class="fas fa-search-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="text-center">
+                                            <span id="zoom-level">100%</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <label class="form-label">Enhancement Intensity:</label>
+                                        <div class="mb-2">
+                                            <label for="text-enhancement" class="form-label">Text Enhancement:</label>
+                                            <input type="range" class="form-range" id="text-enhancement" min="0" max="200" value="100">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="color-enhancement" class="form-label">Color Enhancement:</label>
+                                            <input type="range" class="form-range" id="color-enhancement" min="0" max="200" value="100">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="sharpness-enhancement" class="form-label">Sharpness:</label>
+                                            <input type="range" class="form-range" id="sharpness-enhancement" min="0" max="200" value="100">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="contrast-enhancement" class="form-label">Contrast:</label>
+                                            <input type="range" class="form-range" id="contrast-enhancement" min="0" max="200" value="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Estimated conversion time: <span id="estimated-time">0 seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div id="preview-section" class="mt-4 d-none">
+                        <h5 class="mb-3">Preview</h5>
+                        <div class="preview-controls mb-3">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary" id="prev-page">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="next-page">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group ms-2" role="group">
+                                <button type="button" class="btn btn-outline-secondary" id="rotate-left">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" id="rotate-right">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="preview-container" class="row g-3"></div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button id="convert-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-image"></i> Convert to TIFF
+                        </button>
+                    </div>
+
+                    <div class="spinner" id="loading-spinner"></div>
+                </div>
+
+                <!-- Ad Section -->
+                <div class="ad-container text-center mt-4">
+                    <div class="ad-placeholder">
+                        Advertisement
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer will be dynamically loaded -->
+    <footer class="container-fluid py-4 mt-5 bg-light">
+        <div class="row g-4">
+            <!-- About Us Section -->
+            <div class="col-12 col-md-4">
+                <h5 class="mb-3">About Us</h5>
+                <p class="text-muted">PDF Multi-Tools provides a comprehensive suite of PDF tools to help you work with PDF documents efficiently.</p>
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="col-6 col-md-4">
+                <h5 class="mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="../index.html" class="text-decoration-none text-primary link-hover">Home</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="../index.html#tools-grid" class="text-decoration-none text-primary link-hover">Tools</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Connect With Us Section -->
+            <div class="col-6 col-md-4">
+                <h5 class="mb-3">Connect With Us</h5>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-primary fs-5" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-primary fs-5" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-primary fs-5" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-primary fs-5" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <p class="text-muted mb-0">© 2025 PDF Multi-Tools. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JSZip for creating ZIP archives -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Lightbox for preview -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/utils/pdf-processor.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/tools/pdf-to-tiff.js"></script>
+</body>
+</html> 

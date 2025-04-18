@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign PDF Tool - PDF Multi-Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Signature Pad -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header will be dynamically loaded -->
+    <div id="header-placeholder"></div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">Sign PDF Tool</h1>
+                <p class="text-center mb-4">Add digital signatures to your PDF documents</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tool-container">
+                    <!-- File Upload Area -->
+                    <div class="file-upload-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <h4>Drag & Drop PDF Files Here</h4>
+                        <p class="text-muted">or</p>
+                        <input type="file" id="file-input" accept=".pdf" class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            Choose File
+                        </button>
+                    </div>
+
+                    <!-- Signing Options -->
+                    <div id="signing-options" class="mt-4 d-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Signing Options</h5>
+                                
+                                <!-- Signature Type -->
+                                <div class="mb-3">
+                                    <label class="form-label">Signature Type:</label>
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="signature-type" id="draw-signature" checked>
+                                        <label class="btn btn-outline-primary" for="draw-signature">
+                                            <i class="fas fa-pen"></i> Draw Signature
+                                        </label>
+                                        <input type="radio" class="btn-check" name="signature-type" id="upload-signature">
+                                        <label class="btn btn-outline-primary" for="upload-signature">
+                                            <i class="fas fa-upload"></i> Upload Image
+                                        </label>
+                                        <input type="radio" class="btn-check" name="signature-type" id="text-signature">
+                                        <label class="btn btn-outline-primary" for="text-signature">
+                                            <i class="fas fa-font"></i> Text Signature
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Signature Input Area -->
+                                <div id="signature-input-area">
+                                    <!-- Draw Signature -->
+                                    <div id="draw-signature-area" class="mb-3">
+                                        <div class="signature-pad-container">
+                                            <canvas id="signature-pad" class="border rounded"></canvas>
+                                        </div>
+                                        <div class="mt-2">
+                                            <button class="btn btn-outline-danger" id="clear-signature">
+                                                <i class="fas fa-eraser"></i> Clear
+                                            </button>
+                                            <button class="btn btn-outline-primary" id="undo-signature">
+                                                <i class="fas fa-undo"></i> Undo
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Upload Signature -->
+                                    <div id="upload-signature-area" class="mb-3 d-none">
+                                        <input type="file" id="signature-image" accept="image/*" class="form-control">
+                                        <small class="text-muted">Upload a PNG, JPG, or GIF image of your signature</small>
+                                    </div>
+
+                                    <!-- Text Signature -->
+                                    <div id="text-signature-area" class="mb-3 d-none">
+                                        <div class="input-group">
+                                            <input type="text" id="signature-text" class="form-control" placeholder="Enter your name">
+                                            <select id="signature-font" class="form-select">
+                                                <option value="Dancing Script">Dancing Script</option>
+                                                <option value="Great Vibes">Great Vibes</option>
+                                                <option value="Allura">Allura</option>
+                                                <option value="Brush Script MT">Brush Script MT</option>
+                                                <option value="Monotype Corsiva">Monotype Corsiva</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Signature Properties -->
+                                <div class="mb-3">
+                                    <label class="form-label">Signature Properties:</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="signature-size" class="form-label">Size</label>
+                                            <input type="range" class="form-range" id="signature-size" min="50" max="200" value="100">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="signature-opacity" class="form-label">Opacity</label>
+                                            <input type="range" class="form-range" id="signature-opacity" min="0" max="100" value="100">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-6">
+                                            <label for="signature-color" class="form-label">Color</label>
+                                            <input type="color" class="form-control form-control-color" id="signature-color" value="#000000">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="signature-rotation" class="form-label">Rotation</label>
+                                            <input type="range" class="form-range" id="signature-rotation" min="-45" max="45" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Page Selection -->
+                                <div class="mb-3">
+                                    <label class="form-label">Pages to Sign:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="all-pages" checked>
+                                        <label class="form-check-label" for="all-pages">
+                                            All Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="custom-pages">
+                                        <label class="form-check-label" for="custom-pages">
+                                            Custom Range
+                                        </label>
+                                    </div>
+                                    <div id="page-range-input" class="mt-2 d-none">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="start-page" min="1" placeholder="Start">
+                                            <span class="input-group-text">to</span>
+                                            <input type="number" class="form-control" id="end-page" min="1" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Signature Position -->
+                                <div class="mb-3">
+                                    <label class="form-label">Signature Position:</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="signature-x" class="form-label">X Position</label>
+                                            <input type="range" class="form-range" id="signature-x" min="0" max="100" value="50">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="signature-y" class="form-label">Y Position</label>
+                                            <input type="range" class="form-range" id="signature-y" min="0" max="100" value="50">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preview Section -->
+                                <div class="mb-3">
+                                    <label class="form-label">Preview:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="show-preview" checked>
+                                        <label class="form-check-label" for="show-preview">
+                                            Show Page Preview
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Click and drag the signature in the preview to adjust its position
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div id="preview-section" class="mt-4 d-none">
+                        <h5 class="mb-3">Preview</h5>
+                        <div class="preview-controls mb-3">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary" id="prev-page">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="next-page">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <span class="ms-3">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                        </div>
+                        <div id="preview-container" class="border rounded p-3">
+                            <div id="pdf-preview" class="preview-image"></div>
+                            <div id="signature-preview" class="signature-preview"></div>
+                        </div>
+                    </div>
+
+                    <!-- Process Button -->
+                    <div class="mt-4 text-center">
+                        <button id="process-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-signature"></i> Sign PDF
+                        </button>
+                    </div>
+
+                    <div class="spinner" id="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer will be dynamically loaded -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- PDF.js for PDF rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/tools/sign-pdf.js"></script>
+</body>
+</html> 

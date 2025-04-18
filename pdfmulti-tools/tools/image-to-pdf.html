@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF Converter - PDF Multi-Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <!-- FileSaver.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <!-- Header will be dynamically loaded -->
+    <div id="header-placeholder"></div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">Image to PDF Converter</h1>
+                <p class="text-center mb-4">Convert images to PDF documents</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tool-container">
+                    <div class="file-upload-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <h4>Drag & Drop Images Here</h4>
+                        <p class="text-muted">or</p>
+                        <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.webp,.gif" class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            Choose Files
+                        </button>
+                        <p class="text-muted mt-2">Supported formats: JPG, JPEG, PNG, WebP, GIF</p>
+                    </div>
+
+                    <div id="file-list" class="mt-4">
+                        <!-- Files will be listed here -->
+                    </div>
+
+                    <div class="mt-4">
+                        <h5 class="mb-3">Conversion Options</h5>
+                        <div class="row g-3">
+                            <!-- Page Size -->
+                            <div class="col-md-6">
+                                <label for="page-size" class="form-label">Page Size</label>
+                                <select class="form-select" id="page-size">
+                                    <option value="a4">A4</option>
+                                    <option value="letter">Letter</option>
+                                    <option value="legal">Legal</option>
+                                    <option value="a3">A3</option>
+                                    <option value="a5">A5</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+
+                            <!-- Page Orientation -->
+                            <div class="col-md-6">
+                                <label for="orientation" class="form-label">Orientation</label>
+                                <select class="form-select" id="orientation">
+                                    <option value="portrait">Portrait</option>
+                                    <option value="landscape">Landscape</option>
+                                    <option value="auto">Auto (Based on Image)</option>
+                                </select>
+                            </div>
+
+                            <!-- Image Quality -->
+                            <div class="col-md-6">
+                                <label for="quality" class="form-label">Image Quality</label>
+                                <input type="range" class="form-range" id="quality" min="1" max="100" value="90">
+                                <div class="d-flex justify-content-between">
+                                    <small>Low</small>
+                                    <small>High</small>
+                                </div>
+                            </div>
+
+                            <!-- JPEG/WebP Specific Options -->
+                            <div class="col-md-6">
+                                <label for="compression" class="form-label">Compression Level</label>
+                                <select class="form-select" id="compression">
+                                    <option value="low">Low (Better Quality)</option>
+                                    <option value="medium" selected>Medium (Balanced)</option>
+                                    <option value="high">High (Smaller File)</option>
+                                </select>
+                            </div>
+
+                            <!-- Custom Page Size (hidden by default) -->
+                            <div class="col-md-6 d-none" id="custom-size-container">
+                                <label for="custom-width" class="form-label">Width (mm)</label>
+                                <input type="number" class="form-control" id="custom-width" min="1" value="210">
+                            </div>
+                            <div class="col-md-6 d-none" id="custom-height-container">
+                                <label for="custom-height" class="form-label">Height (mm)</label>
+                                <input type="number" class="form-control" id="custom-height" min="1" value="297">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button id="convert-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-file-pdf"></i> Convert to PDF
+                        </button>
+                    </div>
+
+                    <div class="spinner" id="loading-spinner"></div>
+                </div>
+
+                <!-- Ad Section -->
+                <div class="ad-container text-center mt-4">
+                    <div class="ad-placeholder">
+                        Advertisement
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer will be dynamically loaded -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/tools/image-to-pdf.js"></script>
+</body>
+</html> 

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to PNG Converter - PDF Multi-Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-file-pdf"></i>
+                PDF Multi-Tools
+            </a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../tools.html">Tools</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">PDF to PNG Converter</h1>
+            <p class="page-description">Convert your PDF pages to high-quality PNG images</p>
+
+            <div class="drop-area" id="drop-area">
+                <i class="fas fa-cloud-upload-alt drop-icon"></i>
+                <h3 class="drop-text">Drag & Drop PDF Files Here</h3>
+                <p class="or-text">or</p>
+                <input type="file" id="file-input" accept=".pdf" class="d-none" multiple>
+                <button class="btn-choose" onclick="document.getElementById('file-input').click()">
+                    Choose Files
+                </button>
+            </div>
+
+            <div id="file-list"></div>
+
+            <!-- Conversion Options Section -->
+            <div class="conversion-options bg-light p-3 rounded mt-3 mb-3 d-none" id="conversion-options">
+                <h5 class="text-primary mb-3"><i class="fas fa-sliders-h me-2"></i>Conversion Options</h5>
+                
+                <div class="row g-3">
+                    <!-- Basic Options -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-white">
+                                <h6 class="mb-0">Image Options</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="image-quality" class="form-label">Image Quality</label>
+                                    <select class="form-select" id="image-quality">
+                                        <option value="low">Low (72 DPI)</option>
+                                        <option value="medium" selected>Medium (150 DPI)</option>
+                                        <option value="high">High (300 DPI)</option>
+                                        <option value="veryhigh">Very High (600 DPI)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="page-range" class="form-label">Page Range</label>
+                                    <select class="form-select" id="page-range">
+                                        <option value="all" selected>All Pages</option>
+                                        <option value="1">First Page Only</option>
+                                        <option value="custom">Custom Range</option>
+                                    </select>
+                                    <div class="mt-2 d-none" id="custom-range-container">
+                                        <input type="text" class="form-control" id="custom-range" placeholder="e.g., 1-5, 8, 11-13">
+                                        <small class="form-text text-muted">Specify pages and/or page ranges separated by commas</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Options -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-white">
+                                <h6 class="mb-0">Output Options</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="extract-text" checked>
+                                    <label class="form-check-label" for="extract-text">Include Text Layer (OCR)</label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="transparent-bg">
+                                    <label class="form-check-label" for="transparent-bg">Transparent Background</label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="auto-zip" checked>
+                                    <label class="form-check-label" for="auto-zip">Automatically ZIP Multiple Images</label>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="naming-pattern" class="form-label">File Naming Pattern</label>
+                                    <select class="form-select" id="naming-pattern">
+                                        <option value="filename_page" selected>filename_page.png</option>
+                                        <option value="page_filename">page_filename.png</option>
+                                        <option value="page_number">page_001.png</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Info Section -->
+            <div class="file-info-section bg-light p-3 rounded mt-3 d-none" id="file-info">
+                <h5 class="text-primary"><i class="fas fa-info-circle me-2"></i>File Information</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="mb-1"><strong>Total Size:</strong> <span id="file-size">0</span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1"><strong>Estimated Pages:</strong> <span id="total-pages">0</span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1"><strong>Estimated Time:</strong> <span id="estimated-time">0 seconds</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar Section -->
+            <div class="progress mt-3 d-none" id="progress-bar" style="height: 10px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+            </div>
+            <p class="text-center mt-2" id="progress-text"></p>
+
+            <!-- Buttons Section -->
+            <div class="d-grid gap-2 d-md-flex justify-content-center mt-3">
+                <button id="convert-btn" class="btn btn-primary btn-lg" disabled>
+                    <i class="fas fa-images me-2"></i>Convert to PNG
+                </button>
+                <div id="loading-spinner" class="spinner-border text-primary d-none" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section mt-5">
+                <h4 class="text-primary"><i class="fas fa-question-circle me-2"></i>Frequently Asked Questions</h4>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Why convert PDF to PNG images?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Converting PDFs to PNG images offers several advantages:</p>
+                                <ul>
+                                    <li><strong>Universal compatibility:</strong> PNG images can be viewed on virtually any device without special software</li>
+                                    <li><strong>Lossless quality:</strong> PNG is a lossless format that preserves image details</li>
+                                    <li><strong>Transparency support:</strong> PNGs can have transparent backgrounds</li>
+                                    <li><strong>Web-friendly:</strong> PNG images are ideal for using in websites and presentations</li>
+                                    <li><strong>Easier sharing:</strong> Some recipients may find it easier to view images than PDF files</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                What resolution should I choose?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>The resolution you should choose depends on your intended use:</p>
+                                <ul>
+                                    <li><strong>Low (72 DPI):</strong> Good for web viewing or screen display. Smaller file size but less detail.</li>
+                                    <li><strong>Medium (150 DPI):</strong> Balanced option for most uses. Good quality with reasonable file size.</li>
+                                    <li><strong>High (300 DPI):</strong> Print-quality resolution. Larger files but preserves fine details.</li>
+                                    <li><strong>Very High (600 DPI):</strong> Best for professional printing or when you need to capture the finest details.</li>
+                                </ul>
+                                <p>Higher resolutions create larger file sizes but preserve more detail.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="advertisement">
+            Advertisement
+        </div>
+    </div>
+
+    <div class="quick-links">
+        <h5>Quick Links</h5>
+        <a href="../index.html">Home</a>
+        <a href="../tools.html">Tools</a>
+    </div>
+
+    <p class="footer-text">&copy; 2025 PDF Multi-Tools. All rights reserved.</p>
+
+    <!-- Required Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="../js/tools/pdf-to-png.js"></script>
+</body>
+</html> 

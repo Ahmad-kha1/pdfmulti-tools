@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>Settings - PDF Multi-Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .settings-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+        .settings-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .settings-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+        }
+        .theme-preview {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .theme-light {
+            background-color: #ffffff;
+            color: #212529;
+        }
+        .theme-dark {
+            background-color: #343a40;
+            color: #f8f9fa;
+        }
+        .theme-system {
+            background: linear-gradient(to right, #ffffff 0%, #ffffff 50%, #343a40 50%, #343a40 100%);
+            color: #212529;
+        }
+        
+        /* Theme-specific styles will be controlled by theme classes on html element */
+        .theme-light {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+        
+        .theme-dark {
+            --bg-color: #212529;
+            --text-color: #f8f9fa;
+            --card-bg: #343a40;
+            --border-color: #495057;
+        }
+        
+        /* High contrast mode */
+        .high-contrast {
+            --contrast-ratio: 1.5;
+        }
+        
+        /* Animation control */
+        .no-animations * {
+            transition: none !important;
+            animation: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (loaded via script) -->
+    <div id="header-placeholder"></div>
+
+    <div class="container settings-container">
+        <h1 class="mb-4"><i class="fas fa-cog me-2"></i>Settings</h1>
+        
+        <form id="settings-form">
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link active" id="v-pills-general-tab" data-bs-toggle="pill" data-bs-target="#v-pills-general" type="button" role="tab" aria-controls="v-pills-general" aria-selected="true">
+                            <i class="fas fa-sliders-h me-2"></i>General
+                        </button>
+                        <button class="nav-link" id="v-pills-appearance-tab" data-bs-toggle="pill" data-bs-target="#v-pills-appearance" type="button" role="tab" aria-controls="v-pills-appearance" aria-selected="false">
+                            <i class="fas fa-palette me-2"></i>Appearance
+                        </button>
+                        <button class="nav-link" id="v-pills-performance-tab" data-bs-toggle="pill" data-bs-target="#v-pills-performance" type="button" role="tab" aria-controls="v-pills-performance" aria-selected="false">
+                            <i class="fas fa-tachometer-alt me-2"></i>Performance
+                        </button>
+                        <button class="nav-link" id="v-pills-downloads-tab" data-bs-toggle="pill" data-bs-target="#v-pills-downloads" type="button" role="tab" aria-controls="v-pills-downloads" aria-selected="false">
+                            <i class="fas fa-download me-2"></i>Downloads
+                        </button>
+                        <button class="nav-link" id="v-pills-advanced-tab" data-bs-toggle="pill" data-bs-target="#v-pills-advanced" type="button" role="tab" aria-controls="v-pills-advanced" aria-selected="false">
+                            <i class="fas fa-tools me-2"></i>Advanced
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <!-- General Settings -->
+                        <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel" aria-labelledby="v-pills-general-tab">
+                            <h3 class="mb-3">General Settings</h3>
+                            
+                            <div class="settings-section">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="auto-save" data-setting="general.autoSave" checked>
+                                    <label class="form-check-label" for="auto-save">Auto-save settings</label>
+                                    <div class="form-text">Automatically save settings when changed</div>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="remember-last-tool" data-setting="general.rememberLastTool">
+                                    <label class="form-check-label" for="remember-last-tool">Remember last used tools</label>
+                                    <div class="form-text">Show your recently used tools on the homepage</div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Language</h5>
+                                <select class="form-select" id="language" data-setting="general.language">
+                                    <option value="en">English</option>
+                                    <option value="es">Español</option>
+                                    <option value="fr">Français</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="zh">中文</option>
+                                </select>
+                                <div class="form-text">Interface language (some features may not be fully translated)</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Appearance Settings -->
+                        <div class="tab-pane fade" id="v-pills-appearance" role="tabpanel" aria-labelledby="v-pills-appearance-tab">
+                            <h3 class="mb-3">Appearance Settings</h3>
+                            
+                            <div class="settings-section">
+                                <h5>Theme</h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="theme-preview theme-light">
+                                            <i class="fas fa-sun"></i>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="theme" id="theme-light" value="light" data-setting="general.theme" checked>
+                                            <label class="form-check-label" for="theme-light">Light</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="theme-preview theme-dark">
+                                            <i class="fas fa-moon"></i>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="theme" id="theme-dark" value="dark" data-setting="general.theme">
+                                            <label class="form-check-label" for="theme-dark">Dark</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="theme-preview theme-system">
+                                            <i class="fas fa-desktop"></i>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="theme" id="theme-system" value="system" data-setting="general.theme">
+                                            <label class="form-check-label" for="theme-system">System</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Font Size</h5>
+                                <div class="mb-3">
+                                    <label for="font-size" class="form-label">Interface text size: <span id="font-size-value">100</span>%</label>
+                                    <input type="range" class="form-range" min="80" max="120" step="5" value="100" id="font-size" data-setting="appearance.fontSize">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Smaller</span>
+                                        <span>Default</span>
+                                        <span>Larger</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Visual Preferences</h5>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="show-tooltips" data-setting="appearance.showToolTips" checked>
+                                    <label class="form-check-label" for="show-tooltips">Show tooltips</label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="animations-enabled" data-setting="appearance.animationsEnabled" checked>
+                                    <label class="form-check-label" for="animations-enabled">Enable animations</label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="high-contrast-mode" data-setting="appearance.highContrastMode">
+                                    <label class="form-check-label" for="high-contrast-mode">High contrast mode</label>
+                                    <div class="form-text">Increase contrast for better visibility</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Settings -->
+                        <div class="tab-pane fade" id="v-pills-performance" role="tabpanel" aria-labelledby="v-pills-performance-tab">
+                            <h3 class="mb-3">Performance Settings</h3>
+                            
+                            <div class="settings-section">
+                                <h5>Processing</h5>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="use-workers" data-setting="performance.useWorkers" checked>
+                                    <label class="form-check-label" for="use-workers">Use Web Workers</label>
+                                    <div class="form-text">Process files in background threads (recommended)</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="max-concurrent-jobs" class="form-label">Maximum concurrent jobs</label>
+                                    <select class="form-select" id="max-concurrent-jobs" data-setting="performance.maxConcurrentJobs">
+                                        <option value="1">1 (Low CPU usage)</option>
+                                        <option value="2">2</option>
+                                        <option value="4" selected>4 (Balanced)</option>
+                                        <option value="8">8</option>
+                                        <option value="12">12 (High performance)</option>
+                                    </select>
+                                    <div class="form-text">Controls how many files can be processed simultaneously</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="render-mode" class="form-label">Render quality</label>
+                                    <select class="form-select" id="render-mode" data-setting="performance.renderMode">
+                                        <option value="fast">Fast (Lower quality)</option>
+                                        <option value="normal" selected>Normal (Balanced)</option>
+                                        <option value="high-quality">High Quality (Slower)</option>
+                                    </select>
+                                    <div class="form-text">Higher quality requires more processing power</div>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="low-memory-mode" data-setting="performance.lowMemoryMode">
+                                    <label class="form-check-label" for="low-memory-mode">Low memory mode</label>
+                                    <div class="form-text">For devices with limited memory (reduces performance)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Caching</h5>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="enable-cache" data-setting="performance.enableCache" checked>
+                                    <label class="form-check-label" for="enable-cache">Enable cache</label>
+                                    <div class="form-text">Cache processed files to improve performance</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="cache-ttl" class="form-label">Cache duration</label>
+                                    <select class="form-select" id="cache-ttl" data-setting="performance.cacheTTL">
+                                        <option value="300000">5 minutes</option>
+                                        <option value="1800000">30 minutes</option>
+                                        <option value="3600000" selected>1 hour</option>
+                                        <option value="86400000">24 hours</option>
+                                    </select>
+                                    <div class="form-text">How long to keep processed files in cache</div>
+                                </div>
+                                
+                                <button type="button" class="btn btn-outline-danger" id="clear-cache-btn">
+                                    <i class="fas fa-trash-alt me-2"></i>Clear Cache
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Downloads Settings -->
+                        <div class="tab-pane fade" id="v-pills-downloads" role="tabpanel" aria-labelledby="v-pills-downloads-tab">
+                            <h3 class="mb-3">Downloads Settings</h3>
+                            
+                            <div class="settings-section">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="auto-download" data-setting="downloads.autoDownload" checked>
+                                    <label class="form-check-label" for="auto-download">Auto-download results</label>
+                                    <div class="form-text">Automatically download files when processing completes</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="filename-template" class="form-label">Default filename template</label>
+                                    <input type="text" class="form-control" id="filename-template" data-setting="downloads.filenameTemplate" 
+                                           value="{filename}_{tool}_{date}">
+                                    <div class="form-text">Available variables: {filename}, {tool}, {date}, {time}</div>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="overwrite-existing" data-setting="downloads.overwriteExisting" checked>
+                                    <label class="form-check-label" for="overwrite-existing">Overwrite existing files</label>
+                                    <div class="form-text">If unchecked, a number will be appended to duplicate filenames</div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Storage Options</h5>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="zip-multi-files" data-setting="downloads.zipMultiFiles">
+                                    <label class="form-check-label" for="zip-multi-files">ZIP multiple result files</label>
+                                    <div class="form-text">Create a ZIP archive when processing multiple files</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="save-location" class="form-label">Save location</label>
+                                    <select class="form-select" id="save-location" data-setting="downloads.saveLocation">
+                                        <option value="downloads" selected>Browser's download folder</option>
+                                        <option value="ask">Ask each time</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Advanced Settings -->
+                        <div class="tab-pane fade" id="v-pills-advanced" role="tabpanel" aria-labelledby="v-pills-advanced-tab">
+                            <h3 class="mb-3">Advanced Settings</h3>
+                            
+                            <div class="settings-section">
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    These settings are for advanced users. Changing them may affect application performance.
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="debug-mode" data-setting="advanced.debugMode">
+                                    <label class="form-check-label" for="debug-mode">Debug mode</label>
+                                    <div class="form-text">Show detailed processing information in console</div>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="all-formats" data-setting="advanced.allFormats">
+                                    <label class="form-check-label" for="all-formats">Enable all format conversions</label>
+                                    <div class="form-text">Includes experimental format conversions</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="security-level" class="form-label">Security level</label>
+                                    <select class="form-select" id="security-level" data-setting="advanced.securityLevel">
+                                        <option value="low">Low (Faster processing)</option>
+                                        <option value="standard" selected>Standard (Recommended)</option>
+                                        <option value="high">High (Slower processing)</option>
+                                    </select>
+                                    <div class="form-text">Higher security increases processing time</div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Custom Libraries</h5>
+                                <div class="mb-3">
+                                    <label for="custom-libraries" class="form-label">Custom library URLs (one per line)</label>
+                                    <textarea class="form-control" id="custom-libraries" data-setting="advanced.customLibraries" rows="3"></textarea>
+                                    <div class="form-text">External JavaScript libraries to load (requires restart)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h5>Reset Settings</h5>
+                                <p>This will reset all settings to their default values.</p>
+                                <button type="button" class="btn btn-danger" id="reset-settings-btn">
+                                    <i class="fas fa-undo-alt me-2"></i>Reset All Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-secondary me-2" id="cancel-btn">Cancel</button>
+                <button type="button" class="btn btn-primary d-none" id="save-settings-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer (loaded via script) -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/utils/settings-manager.js"></script>
+    <script src="../js/utils/common.js"></script>
+    <script>
+        // Load header and footer
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('../components/header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header-placeholder').innerHTML = data;
+                });
+                
+            fetch('../components/footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-placeholder').innerHTML = data;
+                });
+                
+            // Update font size display when slider changes
+            const fontSizeSlider = document.getElementById('font-size');
+            const fontSizeValue = document.getElementById('font-size-value');
+            
+            if (fontSizeSlider && fontSizeValue) {
+                fontSizeSlider.addEventListener('input', function() {
+                    fontSizeValue.textContent = this.value;
+                });
+            }
+            
+            // Cancel button returns to home page
+            document.getElementById('cancel-btn').addEventListener('click', function() {
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html> 

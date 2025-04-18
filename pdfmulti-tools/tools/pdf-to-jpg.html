@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to JPG Converter - PDF Multi-Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header will be dynamically loaded -->
+    <div id="header-placeholder"></div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">PDF to JPG Converter</h1>
+                <p class="text-center mb-4">Convert PDF pages to high-quality JPG images</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tool-container">
+                    <div class="file-upload-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                        <h4>Drag & Drop PDF File Here</h4>
+                        <p class="text-muted">or</p>
+                        <input type="file" id="file-input" accept=".pdf" class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            Choose File
+                        </button>
+                    </div>
+
+                    <div id="file-info" class="mt-4 d-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">PDF Information</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="mb-2">File Size: <span id="file-size">0 MB</span></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-2">Pages: <span id="total-pages">0</span></div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image-quality" class="form-label">Image Quality:</label>
+                                    <input type="range" class="form-range" id="image-quality" min="1" max="100" value="90">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Low</span>
+                                        <span id="quality-value">90%</span>
+                                        <span>High</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image-resolution" class="form-label">Resolution (DPI):</label>
+                                    <select class="form-select" id="image-resolution">
+                                        <option value="72">72 DPI (Web)</option>
+                                        <option value="150">150 DPI (Print)</option>
+                                        <option value="300" selected>300 DPI (High Quality)</option>
+                                        <option value="600">600 DPI (Ultra High)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Image Options:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remove-background" checked>
+                                        <label class="form-check-label" for="remove-background">
+                                            Remove Background
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enhance-text" checked>
+                                        <label class="form-check-label" for="enhance-text">
+                                            Enhance Text
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optimize-colors" checked>
+                                        <label class="form-check-label" for="optimize-colors">
+                                            Optimize Colors
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pages to Convert:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="all-pages" checked>
+                                        <label class="form-check-label" for="all-pages">
+                                            All Pages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="page-selection" id="custom-pages">
+                                        <label class="form-check-label" for="custom-pages">
+                                            Custom Range
+                                        </label>
+                                    </div>
+                                    <div id="page-range-input" class="mt-2 d-none">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="start-page" min="1" placeholder="Start">
+                                            <span class="input-group-text">to</span>
+                                            <input type="number" class="form-control" id="end-page" min="1" placeholder="End">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Estimated conversion time: <span id="estimated-time">0 seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button id="convert-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-image"></i> Convert to JPG
+                        </button>
+                    </div>
+
+                    <div class="spinner" id="loading-spinner"></div>
+                </div>
+
+                <!-- Ad Section -->
+                <div class="ad-container text-center mt-4">
+                    <div class="ad-placeholder">
+                        Advertisement
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer will be dynamically loaded -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/tools/pdf-to-jpg.js"></script>
+</body>
+</html> 
